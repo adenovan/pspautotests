@@ -5,14 +5,18 @@
 #include <pspnet.h>
 #include <pspnet_adhocctl.h>
 #include <psputility_netmodules.h>
+#include <iostream>
+#include <string>
 
 
 extern "C" int main(int argc, char *argv[]) {
-    int ctlinit,ctlterm,ctlcreate;
+    int ctlinit,ctlterm,ctlcreate,ctlconnect;
 
     int stacksize = 5120;
     int priority = 30;
     struct productStruct prod;
+
+    std::string groupname;
 
 	checkpointNext("Init:");
 	checkpoint("sceUtilityLoadNetModule common: %08x", sceUtilityLoadNetModule(PSP_NET_MODULE_COMMON));
@@ -25,7 +29,7 @@ extern "C" int main(int argc, char *argv[]) {
 
 	checkpointNext("Init and term all zeros product");
     memset(&prod,0,sizeof(prod));
-    checkpoint("SceNetAdhocctlInit: %08x", ctlinit = sceNetAdhocctlInit(stacksize, priority, &prod));  // 1, 0 = unknown but works
+    checkpoint("SceNetAdhocctlInit: %08x", ctlinit = sceNetAdhocctlInit(stacksize, priority, &prod));  
     checkpoint("sceNetAdhocctlTerm: %08x", ctlterm = sceNetAdhocctlTerm());
     
     checkpointNext("Init create and term 9 character product with japan region code first NPJH50588");
@@ -38,7 +42,7 @@ extern "C" int main(int argc, char *argv[]) {
     prod.product[6] = '5';
     prod.product[7] = '8';
     prod.product[8] = '8';
-    checkpoint("SceNetAdhocctlInit: %08x", ctlinit = sceNetAdhocctlInit(stacksize, priority, &prod));  // 1, 0 = unknown but works
+    checkpoint("SceNetAdhocctlInit: %08x", ctlinit = sceNetAdhocctlInit(stacksize, priority, &prod)); 
     checkpoint("SceNetAdhocctlCreate: %08x groupname R01", ctlcreate = sceNetAdhocctlCreate("R01"));  
     checkpoint("sceNetAdhocctlTerm: %08x", ctlterm = sceNetAdhocctlTerm());
 
@@ -52,7 +56,7 @@ extern "C" int main(int argc, char *argv[]) {
     prod.product[6] = '3';
     prod.product[7] = '9';
     prod.product[8] = 0;
-    checkpoint("SceNetAdhocctlInit: %08x", ctlinit = sceNetAdhocctlInit(stacksize, priority, &prod));  // 1, 0 = unknown but works
+    checkpoint("SceNetAdhocctlInit: %08x", ctlinit = sceNetAdhocctlInit(stacksize, priority, &prod));  
     checkpoint("sceNetAdhocctlTerm: %08x", ctlterm = sceNetAdhocctlTerm());
 
 
@@ -66,7 +70,7 @@ extern "C" int main(int argc, char *argv[]) {
     prod.product[6] = '3';
     prod.product[7] = '9';
     prod.product[8] = '1';
-    checkpoint("First SceNetAdhocctlInit: %08x", ctlinit = sceNetAdhocctlInit(stacksize, priority, &prod));  // 1, 0 = unknown but works
+    checkpoint("First SceNetAdhocctlInit: %08x", ctlinit = sceNetAdhocctlInit(stacksize, priority, &prod));  
     checkpoint("Second SceNetAdhocctlInit: %08x", ctlinit = sceNetAdhocctlInit(stacksize, priority, &prod)); 
     checkpoint("sceNetAdhocctlTerm: %08x", ctlterm = sceNetAdhocctlTerm());
 
@@ -101,7 +105,7 @@ extern "C" int main(int argc, char *argv[]) {
     prod.product[6] = '5';
     prod.product[7] = '8';
     prod.product[8] = '8';
-    checkpoint("SceNetAdhocctlInit: %08x", ctlinit = sceNetAdhocctlInit(stacksize, priority, &prod));  // 1, 0 = unknown but works
+    checkpoint("SceNetAdhocctlInit: %08x", ctlinit = sceNetAdhocctlInit(stacksize, priority, &prod));  
     checkpoint("SceNetAdhocctlCreate: %08x groupname R02", ctlcreate = sceNetAdhocctlCreate("R02"));  
     checkpoint("sceNetAdhocctlTerm: %08x", ctlterm = sceNetAdhocctlTerm());
 
@@ -118,7 +122,7 @@ extern "C" int main(int argc, char *argv[]) {
     prod.product[6] = '5';
     prod.product[7] = '8';
     prod.product[8] = '8';
-    checkpoint("SceNetAdhocctlInit: %08x", ctlinit = sceNetAdhocctlInit(stacksize, priority, &prod));  // 1, 0 = unknown but works
+    checkpoint("SceNetAdhocctlInit: %08x", ctlinit = sceNetAdhocctlInit(stacksize, priority, &prod));  
     checkpoint("SceNetAdhocctlCreate: %08x groupname R01", ctlcreate = sceNetAdhocctlCreate("R01"));  
     checkpoint("sceNetAdhocctlTerm: %08x", ctlterm = sceNetAdhocctlTerm());
 
@@ -154,17 +158,99 @@ extern "C" int main(int argc, char *argv[]) {
     checkpoint("sceNetAdhocctlTerm: %08x", ctlterm = sceNetAdhocctlTerm());
 
 
+    groupname = "MHP2Q002";
     checkpointNext("Reinit again after term with no params change");
     checkpoint("SceNetAdhocctlInit: %08x stacksize : %d priority : %d product %s" , ctlinit = sceNetAdhocctlInit(stacksize, priority, &prod),stacksize,priority,prod.product);  
-    checkpoint("SceNetAdhocctlCreate: %08x groupname MHP2Q002", ctlcreate = sceNetAdhocctlCreate("MHP2Q002"));  
+    checkpoint("SceNetAdhocctlCreate: %08x groupname %s", ctlcreate = sceNetAdhocctlCreate(groupname.c_str()),groupname.c_str());  
     checkpoint("sceNetAdhocctlTerm: %08x", ctlterm = sceNetAdhocctlTerm());
 
+
+    groupname = "MHP2Q002";
+    checkpointNext("What happens if we call create two times?");
+    checkpoint("SceNetAdhocctlInit: %08x stacksize : %d priority : %d product %s" , ctlinit = sceNetAdhocctlInit(stacksize, priority, &prod),stacksize,priority,prod.product);  
+    checkpoint("SceNetAdhocctlCreate: %08x groupname %s", ctlcreate = sceNetAdhocctlCreate(groupname.c_str()),groupname.c_str());  
+    checkpoint("SceNetAdhocctlCreate: %08x groupname %s", ctlcreate = sceNetAdhocctlCreate(groupname.c_str()),groupname.c_str()); 
+    checkpoint("sceNetAdhocctlTerm: %08x", ctlterm = sceNetAdhocctlTerm());
+
+
+    //start
+    
+    groupname = "MHP2Q0021";
+    checkpointNext("Longer group name than 8 character");
+    checkpoint("SceNetAdhocctlInit: %08x stacksize : %d priority : %d product %s" , ctlinit = sceNetAdhocctlInit(stacksize, priority, &prod),stacksize,priority,prod.product);  
+    checkpoint("SceNetAdhocctlCreate: %08x groupname %s groupnamelength %d", ctlcreate = sceNetAdhocctlCreate(groupname.c_str()),groupname.c_str(),groupname.length());  
+    checkpoint("sceNetAdhocctlTerm: %08x", ctlterm = sceNetAdhocctlTerm());
+
+    groupname = "MHP2Q00211";
+    checkpoint("SceNetAdhocctlInit: %08x stacksize : %d priority : %d product %s" , ctlinit = sceNetAdhocctlInit(stacksize, priority, &prod),stacksize,priority,prod.product);  
+    checkpoint("SceNetAdhocctlCreate: %08x groupname %s groupnamelength %d", ctlcreate = sceNetAdhocctlCreate(groupname.c_str()),groupname.c_str(),groupname.length());  
+    checkpoint("sceNetAdhocctlTerm: %08x", ctlterm = sceNetAdhocctlTerm());
+
+    groupname = "MHP2Q002112";
+    checkpoint("SceNetAdhocctlInit: %08x stacksize : %d priority : %d product %s" , ctlinit = sceNetAdhocctlInit(stacksize, priority, &prod),stacksize,priority,prod.product);  
+    checkpoint("SceNetAdhocctlCreate: %08x groupname %s groupnamelength %d", ctlcreate = sceNetAdhocctlCreate(groupname.c_str()),groupname.c_str(),groupname.length());  
+    checkpoint("sceNetAdhocctlTerm: %08x", ctlterm = sceNetAdhocctlTerm());
+
+    groupname = "MHP2Q0021123";
+    checkpoint("SceNetAdhocctlInit: %08x stacksize : %d priority : %d product %s" , ctlinit = sceNetAdhocctlInit(stacksize, priority, &prod),stacksize,priority,prod.product);  
+    checkpoint("SceNetAdhocctlCreate: %08x groupname %s groupnamelength %d", ctlcreate = sceNetAdhocctlCreate(groupname.c_str()),groupname.c_str(),groupname.length());  
+    checkpoint("sceNetAdhocctlTerm: %08x", ctlterm = sceNetAdhocctlTerm());
+
+    groupname = "MHP2Q00211234";
+    checkpoint("SceNetAdhocctlInit: %08x stacksize : %d priority : %d product %s" , ctlinit = sceNetAdhocctlInit(stacksize, priority, &prod),stacksize,priority,prod.product);  
+    checkpoint("SceNetAdhocctlCreate: %08x groupname %s groupnamelength %d", ctlcreate = sceNetAdhocctlCreate(groupname.c_str()),groupname.c_str(),groupname.length());  
+    checkpoint("sceNetAdhocctlTerm: %08x", ctlterm = sceNetAdhocctlTerm());
+
+    groupname = "MHP2Q002112345";
+    checkpoint("SceNetAdhocctlInit: %08x stacksize : %d priority : %d product %s" , ctlinit = sceNetAdhocctlInit(stacksize, priority, &prod),stacksize,priority,prod.product);  
+    checkpoint("SceNetAdhocctlCreate: %08x groupname %s groupnamelength %d", ctlcreate = sceNetAdhocctlCreate(groupname.c_str()),groupname.c_str(),groupname.length());  
+    checkpoint("sceNetAdhocctlTerm: %08x", ctlterm = sceNetAdhocctlTerm());
+    
+
+    groupname = "MHP2Q002";
+    checkpointNext("Can we call connect after create?");
+    checkpoint("SceNetAdhocctlInit: %08x stacksize : %d priority : %d product %s" , ctlinit = sceNetAdhocctlInit(stacksize, priority, &prod),stacksize,priority,prod.product);  
+    checkpoint("SceNetAdhocctlCreate: %08x groupname %s groupnamelength %d", ctlcreate = sceNetAdhocctlCreate(groupname.c_str()),groupname.c_str(),groupname.length()); 
+    checkpoint("sceNetAdhocctlConnect: %08x groupname %s groupnamelength %d", ctlconnect = sceNetAdhocctlConnect(groupname.c_str()),groupname.c_str(),groupname.length());  
+    checkpoint("sceNetAdhocctlTerm: %08x", ctlterm = sceNetAdhocctlTerm());
+
+    
+    checkpointNext("we call connect without someone creating the control");
+    checkpoint("SceNetAdhocctlInit: %08x stacksize : %d priority : %d product %s" , ctlinit = sceNetAdhocctlInit(stacksize, priority, &prod),stacksize,priority,prod.product);  
+    checkpoint("sceNetAdhocctlConnect: %08x groupname %s groupnamelength %d", ctlconnect = sceNetAdhocctlConnect(groupname.c_str()),groupname.c_str(),groupname.length());  
+    checkpoint("sceNetAdhocctlTerm: %08x", ctlterm = sceNetAdhocctlTerm());
+
+
+    checkpointNext("we call create after connect in the control");
+    checkpoint("SceNetAdhocctlInit: %08x stacksize : %d priority : %d product %s" , ctlinit = sceNetAdhocctlInit(stacksize, priority, &prod),stacksize,priority,prod.product);  
+    checkpoint("sceNetAdhocctlConnect: %08x groupname %s groupnamelength %d", ctlconnect = sceNetAdhocctlConnect(groupname.c_str()),groupname.c_str(),groupname.length());
+    checkpoint("SceNetAdhocctlCreate: %08x groupname %s groupnamelength %d", ctlcreate = sceNetAdhocctlCreate(groupname.c_str()),groupname.c_str(),groupname.length());
+    checkpoint("sceNetAdhocctlTerm: %08x", ctlterm = sceNetAdhocctlTerm());
+
+
+    checkpointNext("call create without init");
+    checkpoint("SceNetAdhocctlCreate: %08x groupname %s groupnamelength %d", ctlcreate = sceNetAdhocctlCreate(groupname.c_str()),groupname.c_str(),groupname.length());
+
+    checkpointNext("call connect without init");
+    checkpoint("sceNetAdhocctlConnect: %08x groupname %s groupnamelength %d", ctlconnect = sceNetAdhocctlConnect(groupname.c_str()),groupname.c_str(),groupname.length());
 
     checkpointNext("Cleanup exit");    
     checkpoint("sceNetAdhocctlTerm: %08x", ctlterm = sceNetAdhocctlTerm());
 	checkpoint("sceUtilityUnloadModule: %08x", sceUtilityUnloadNetModule(PSP_NET_MODULE_INET));
 	checkpoint("sceUtilityUnloadModule: %08x", sceUtilityUnloadNetModule(PSP_NET_MODULE_ADHOC));
 	checkpoint("sceUtilityUnloadModule: %08x", sceUtilityUnloadNetModule(PSP_NET_MODULE_COMMON));
+
+    
+    
+    checkpointNext("call init without library linked");
+    checkpoint("SceNetAdhocctlInit: %08x stacksize : %d priority : %d product %s" , ctlinit = sceNetAdhocctlInit(stacksize, priority, &prod),stacksize,priority,prod.product);  
+    
+    checkpointNext("call create when module unloaded");
+    checkpoint("SceNetAdhocctlCreate: %08x groupname %s groupnamelength %d", ctlcreate = sceNetAdhocctlCreate(groupname.c_str()),groupname.c_str(),groupname.length());
+
+    checkpointNext("call connect when module unloaded");
+    checkpoint("sceNetAdhocctlConnect: %08x groupname %s groupnamelength %d", ctlconnect = sceNetAdhocctlConnect(groupname.c_str()),groupname.c_str(),groupname.length());
+
     // etc...
 	return 0;
 }
