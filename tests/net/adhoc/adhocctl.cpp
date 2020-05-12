@@ -18,7 +18,7 @@ extern "C" int main(int argc, char *argv[]) {
 
     std::string groupname;
 
-	checkpointNext("Init:");
+	checkpointNext("Load Module first adhocctl test");
 	checkpoint("sceUtilityLoadNetModule common: %08x", sceUtilityLoadNetModule(PSP_NET_MODULE_COMMON));
 	checkpoint("sceUtilityLoadNetModule adhoc: %08x", sceUtilityLoadNetModule(PSP_NET_MODULE_ADHOC));
 	checkpoint("sceUtilityLoadNetModule inet: %08x", sceUtilityLoadNetModule(PSP_NET_MODULE_INET));
@@ -33,128 +33,238 @@ extern "C" int main(int argc, char *argv[]) {
     checkpoint("sceNetAdhocctlTerm: %08x", ctlterm = sceNetAdhocctlTerm());
     
     checkpointNext("Init create and term 9 character product with japan region code first NPJH50588");
-    prod.product[0] = 'N';
-    prod.product[1] = 'P';
-    prod.product[2] = 'J';
-    prod.product[3] = 'H';
-    prod.product[4] = '5';
-    prod.product[5] = '0';
-    prod.product[6] = '5';
-    prod.product[7] = '8';
-    prod.product[8] = '8';
+
+    strncpy(prod.product, "NPJH50588", 9);
+    
     checkpoint("SceNetAdhocctlInit: %08x", ctlinit = sceNetAdhocctlInit(stacksize, priority, &prod)); 
     checkpoint("SceNetAdhocctlCreate: %08x groupname R01", ctlcreate = sceNetAdhocctlCreate("R01"));  
     checkpoint("sceNetAdhocctlTerm: %08x", ctlterm = sceNetAdhocctlTerm());
 
-    checkpointNext("Init and term 8 character product");
-    prod.product[0] = 'U';
-    prod.product[1] = 'L';
-    prod.product[2] = 'U';
-    prod.product[3] = 'S';
-    prod.product[4] = '1';
-    prod.product[5] = '0';
-    prod.product[6] = '3';
-    prod.product[7] = '9';
-    prod.product[8] = 0;
+    checkpointNext("Init and term 8 character product");    
+    memset(&prod,0,sizeof(prod));
+    strncpy(prod.product,"NPJH5058",8);
     checkpoint("SceNetAdhocctlInit: %08x", ctlinit = sceNetAdhocctlInit(stacksize, priority, &prod));  
     checkpoint("sceNetAdhocctlTerm: %08x", ctlterm = sceNetAdhocctlTerm());
 
 
-    checkpointNext("Init Twice 9 character product");
-    prod.product[0] = 'U';
-    prod.product[1] = 'L';
-    prod.product[2] = 'U';
-    prod.product[3] = 'S';
-    prod.product[4] = '1';
-    prod.product[5] = '0';
-    prod.product[6] = '3';
-    prod.product[7] = '9';
-    prod.product[8] = '1';
-    checkpoint("First SceNetAdhocctlInit: %08x", ctlinit = sceNetAdhocctlInit(stacksize, priority, &prod));  
-    checkpoint("Second SceNetAdhocctlInit: %08x", ctlinit = sceNetAdhocctlInit(stacksize, priority, &prod)); 
-    checkpoint("sceNetAdhocctlTerm: %08x", ctlterm = sceNetAdhocctlTerm());
-
-
-    //looks like we cannot change it on runtime or the product not listed in us region?
-    checkpointNext("change stack size to 8192  and priority to 48 product ULUS10391 param then init");
-    stacksize = 8192;
-    priority = 48;
-    prod.product[0] = 'U';
-    prod.product[1] = 'L';
-    prod.product[2] = 'U';
-    prod.product[3] = 'S';
-    prod.product[4] = '1';
-    prod.product[5] = '0';
-    prod.product[6] = '3';
-    prod.product[7] = '9';
-    prod.product[8] = '1';
-
-    checkpoint("SceNetAdhocctlInit: %08x", ctlinit = sceNetAdhocctlInit(stacksize, priority, &prod));  
-    checkpoint("SceNetAdhocctlCreate: %08x groupname MHP2Q000", ctlcreate = sceNetAdhocctlCreate("MHP2Q000"));  
-    checkpoint("sceNetAdhocctlTerm: %08x", ctlterm = sceNetAdhocctlTerm());
-
-
-
-    checkpointNext("Use the first inited product id again region code NPJH50588 but change stacksize and priority./a");
-    prod.product[0] = 'N';
-    prod.product[1] = 'P';
-    prod.product[2] = 'J';
-    prod.product[3] = 'H';
-    prod.product[4] = '5';
-    prod.product[5] = '0';
-    prod.product[6] = '5';
-    prod.product[7] = '8';
-    prod.product[8] = '8';
-    checkpoint("SceNetAdhocctlInit: %08x", ctlinit = sceNetAdhocctlInit(stacksize, priority, &prod));  
-    checkpoint("SceNetAdhocctlCreate: %08x groupname R02", ctlcreate = sceNetAdhocctlCreate("R02"));  
-    checkpoint("sceNetAdhocctlTerm: %08x", ctlterm = sceNetAdhocctlTerm());
-
-
-    checkpointNext("Reuse the first inited adhoc ctl params that worked");
-    stacksize = 5120;
-    priority = 30;
-    prod.product[0] = 'N';
-    prod.product[1] = 'P';
-    prod.product[2] = 'J';
-    prod.product[3] = 'H';
-    prod.product[4] = '5';
-    prod.product[5] = '0';
-    prod.product[6] = '5';
-    prod.product[7] = '8';
-    prod.product[8] = '8';
-    checkpoint("SceNetAdhocctlInit: %08x", ctlinit = sceNetAdhocctlInit(stacksize, priority, &prod));  
-    checkpoint("SceNetAdhocctlCreate: %08x groupname R01", ctlcreate = sceNetAdhocctlCreate("R01"));  
-    checkpoint("sceNetAdhocctlTerm: %08x", ctlterm = sceNetAdhocctlTerm());
-
-
-    checkpointNext("Cleanup module first try");    
+    checkpointNext("Cleanup module first Test");    
     checkpoint("sceNetAdhocctlTerm: %08x", ctlterm = sceNetAdhocctlTerm());
 	checkpoint("sceUtilityUnloadModule: %08x", sceUtilityUnloadNetModule(PSP_NET_MODULE_INET));
 	checkpoint("sceUtilityUnloadModule: %08x", sceUtilityUnloadNetModule(PSP_NET_MODULE_ADHOC));
 	checkpoint("sceUtilityUnloadModule: %08x", sceUtilityUnloadNetModule(PSP_NET_MODULE_COMMON));
 
 
-    checkpointNext("Load Module again and try to reinitiate the working adhocctl");  
-    checkpoint("sceUtilityLoadNetModule common: %08x", sceUtilityLoadNetModule(PSP_NET_MODULE_COMMON));
+
+
+	checkpointNext("Load Module for second adhocctl test");
+	checkpoint("sceUtilityLoadNetModule common: %08x", sceUtilityLoadNetModule(PSP_NET_MODULE_COMMON));
 	checkpoint("sceUtilityLoadNetModule adhoc: %08x", sceUtilityLoadNetModule(PSP_NET_MODULE_ADHOC));
 	checkpoint("sceUtilityLoadNetModule inet: %08x", sceUtilityLoadNetModule(PSP_NET_MODULE_INET));
 
 
-
-    checkpointNext("Try to cleanup by unload module and set the ctl again");
+    checkpointNext("Init Twice 9 character product");
+    
+    strncpy(prod.product, "ULUS10391", 9);
     stacksize = 8192;
     priority = 48;
-    prod.product[0] = 'U';
-    prod.product[1] = 'L';
-    prod.product[2] = 'U';
-    prod.product[3] = 'S';
-    prod.product[4] = '1';
-    prod.product[5] = '0';
-    prod.product[6] = '3';
-    prod.product[7] = '9';
-    prod.product[8] = '1';
+    
+    checkpoint("First SceNetAdhocctlInit: %08x", ctlinit = sceNetAdhocctlInit(stacksize, priority, &prod));  
+    checkpoint("Second SceNetAdhocctlInit: %08x", ctlinit = sceNetAdhocctlInit(stacksize, priority, &prod)); 
+    checkpoint("sceNetAdhocctlTerm: %08x", ctlterm = sceNetAdhocctlTerm());
+
+    checkpointNext("Cleanup module second Test");    
+	checkpoint("sceUtilityUnloadModule: %08x", sceUtilityUnloadNetModule(PSP_NET_MODULE_INET));
+	checkpoint("sceUtilityUnloadModule: %08x", sceUtilityUnloadNetModule(PSP_NET_MODULE_ADHOC));
+	checkpoint("sceUtilityUnloadModule: %08x", sceUtilityUnloadNetModule(PSP_NET_MODULE_COMMON));
+
+
+
+
+	checkpointNext("Load Module third adhocctl test");
+	checkpoint("sceUtilityLoadNetModule common: %08x", sceUtilityLoadNetModule(PSP_NET_MODULE_COMMON));
+	checkpoint("sceUtilityLoadNetModule adhoc: %08x", sceUtilityLoadNetModule(PSP_NET_MODULE_ADHOC));
+	checkpoint("sceUtilityLoadNetModule inet: %08x", sceUtilityLoadNetModule(PSP_NET_MODULE_INET));
+
+
+    stacksize = 5120;
+    priority = 30;
+    strncpy(prod.product, "NPJH50588", 9);
+
+    groupname = "R01";
+
+    checkpoint("SceNetAdhocctlInit: %08x stacksize %d priority %d", ctlinit = sceNetAdhocctlInit(stacksize, priority, &prod),stacksize,priority);  
+    checkpoint("SceNetAdhocctlCreate: %08x groupname %s", ctlcreate = sceNetAdhocctlCreate(groupname.c_str()),groupname.c_str());  
+    checkpoint("sceNetAdhocctlTerm: %08x", ctlterm = sceNetAdhocctlTerm());
+
+
+
+    checkpointNext("Keep Product Name change stack size and priority");
+
+    stacksize = 8192;
+    priority = 48;
+    groupname = "R02";
+    checkpoint("SceNetAdhocctlInit: %08x stacksize %d priority %d", ctlinit = sceNetAdhocctlInit(stacksize, priority, &prod),stacksize,priority);  
+    checkpoint("SceNetAdhocctlCreate: %08x groupname %s", ctlcreate = sceNetAdhocctlCreate(groupname.c_str()),groupname.c_str());  
+    checkpoint("sceNetAdhocctlTerm: %08x", ctlterm = sceNetAdhocctlTerm());
+
+
+
+    checkpointNext("Cleanup module third Test");    
+	checkpoint("sceUtilityUnloadModule: %08x", sceUtilityUnloadNetModule(PSP_NET_MODULE_INET));
+	checkpoint("sceUtilityUnloadModule: %08x", sceUtilityUnloadNetModule(PSP_NET_MODULE_ADHOC));
+	checkpoint("sceUtilityUnloadModule: %08x", sceUtilityUnloadNetModule(PSP_NET_MODULE_COMMON));
+
+
+
+	checkpointNext("Load Module again for fourth adhocctl test");
+	checkpoint("sceUtilityLoadNetModule common: %08x", sceUtilityLoadNetModule(PSP_NET_MODULE_COMMON));
+	checkpoint("sceUtilityLoadNetModule adhoc: %08x", sceUtilityLoadNetModule(PSP_NET_MODULE_ADHOC));
+	checkpoint("sceUtilityLoadNetModule inet: %08x", sceUtilityLoadNetModule(PSP_NET_MODULE_INET));
+
+
+    checkpointNext("Initialize fourth working adhoc");
+    stacksize = 5120;
+    priority = 30;
+    strncpy(prod.product, "NPJH50588", 9);
+    groupname = "R01";
+
+    checkpoint("SceNetAdhocctlInit: %08x stacksize %d priority %d product %s", ctlinit = sceNetAdhocctlInit(stacksize, priority, &prod),stacksize,priority,prod.product);  
+    checkpoint("SceNetAdhocctlCreate: %08x groupname %s", ctlcreate = sceNetAdhocctlCreate(groupname.c_str()),groupname.c_str());  
+    checkpoint("sceNetAdhocctlTerm: %08x", ctlterm = sceNetAdhocctlTerm());
+
+    checkpointNext("Change product id fourth working adhoc stacksize and priority with same groupname");
+    strncpy(prod.product, "ULUS10391", 9);
+    stacksize = 8192;
+    priority = 48;
+    checkpoint("SceNetAdhocctlInit: %08x stacksize %d priority %d product %s", ctlinit = sceNetAdhocctlInit(stacksize, priority, &prod),stacksize,priority,prod.product);  
+    checkpoint("SceNetAdhocctlCreate: %08x groupname %s", ctlcreate = sceNetAdhocctlCreate(groupname.c_str()),groupname.c_str());  
+    checkpoint("sceNetAdhocctlTerm: %08x", ctlterm = sceNetAdhocctlTerm());
+
+    checkpointNext("Change product id fourth working adhoc stacksize and priority with same different groupname");
+    strncpy(prod.product, "ULUS10391", 9);
+    stacksize = 8192;
+    priority = 48;
+    groupname = "MHP2Q000";
+    checkpoint("SceNetAdhocctlInit: %08x stacksize %d priority %d product %s", ctlinit = sceNetAdhocctlInit(stacksize, priority, &prod),stacksize,priority,prod.product);  
+    checkpoint("SceNetAdhocctlCreate: %08x groupname %s", ctlcreate = sceNetAdhocctlCreate(groupname.c_str()),groupname.c_str());  
+    checkpoint("sceNetAdhocctlTerm: %08x", ctlterm = sceNetAdhocctlTerm());
+
+    checkpointNext("Reinit product id back to original and change stack size");
+    strncpy(prod.product, "NPJH50588", 9);
+    stacksize = 5120;
+    priority = 30;
+    checkpoint("SceNetAdhocctlInit: %08x stacksize %d priority %d product %s", ctlinit = sceNetAdhocctlInit(stacksize, priority, &prod),stacksize,priority,prod.product);  
+    checkpoint("SceNetAdhocctlCreate: %08x groupname %s", ctlcreate = sceNetAdhocctlCreate(groupname.c_str()),groupname.c_str());  
+    checkpoint("sceNetAdhocctlTerm: %08x", ctlterm = sceNetAdhocctlTerm());
+
+
+
+    checkpointNext("Call SceNetAdhocctlInit Twice");
+    strncpy(prod.product, "NPJH50588", 9);
+    stacksize = 5120;
+    priority = 30;
+    checkpoint("SceNetAdhocctlInit: %08x stacksize %d priority %d product %s", ctlinit = sceNetAdhocctlInit(stacksize, priority, &prod),stacksize,priority,prod.product);  
+    checkpoint("SceNetAdhocctlInit: %08x stacksize %d priority %d product %s", ctlinit = sceNetAdhocctlInit(stacksize, priority, &prod),stacksize,priority,prod.product);  
+    checkpoint("SceNetAdhocctlCreate: %08x groupname %s", ctlcreate = sceNetAdhocctlCreate(groupname.c_str()),groupname.c_str());  
+    checkpoint("sceNetAdhocctlTerm: %08x", ctlterm = sceNetAdhocctlTerm());
+
+
+    checkpointNext("Change product second times after twice init");
+    strncpy(prod.product, "ULUS10391", 9);
+    stacksize = 8192;
+    priority = 48;
+    groupname = "MHP2Q000";
+    checkpoint("SceNetAdhocctlInit: %08x stacksize %d priority %d product %s", ctlinit = sceNetAdhocctlInit(stacksize, priority, &prod),stacksize,priority,prod.product);  
+    checkpoint("SceNetAdhocctlCreate: %08x groupname %s", ctlcreate = sceNetAdhocctlCreate(groupname.c_str()),groupname.c_str());  
+    checkpoint("sceNetAdhocctlTerm: %08x", ctlterm = sceNetAdhocctlTerm());
+
+
+    checkpointNext("Cleanup module fourth test try");    
+	checkpoint("sceUtilityUnloadModule: %08x", sceUtilityUnloadNetModule(PSP_NET_MODULE_INET));
+	checkpoint("sceUtilityUnloadModule: %08x", sceUtilityUnloadNetModule(PSP_NET_MODULE_ADHOC));
+	checkpoint("sceUtilityUnloadModule: %08x", sceUtilityUnloadNetModule(PSP_NET_MODULE_COMMON));
+
+
+
+	checkpointNext("Load Module again for fifth adhocctl test");
+	checkpoint("sceUtilityLoadNetModule common: %08x", sceUtilityLoadNetModule(PSP_NET_MODULE_COMMON));
+	checkpoint("sceUtilityLoadNetModule adhoc: %08x", sceUtilityLoadNetModule(PSP_NET_MODULE_ADHOC));
+	checkpoint("sceUtilityLoadNetModule inet: %08x", sceUtilityLoadNetModule(PSP_NET_MODULE_INET));
+
+    checkpointNext("Initialize fifth working adhoc");
+    stacksize = 5120;
+    priority = 30;
+    strncpy(prod.product, "NPJH50588", 9);
+    groupname = "R01";
+
+    checkpoint("SceNetAdhocctlInit: %08x stacksize %d priority %d product %s", ctlinit = sceNetAdhocctlInit(stacksize, priority, &prod),stacksize,priority,prod.product);  
+    checkpoint("SceNetAdhocctlCreate: %08x groupname %s", ctlcreate = sceNetAdhocctlCreate(groupname.c_str()),groupname.c_str());  
+    checkpoint("sceNetAdhocctlTerm: %08x", ctlterm = sceNetAdhocctlTerm());
+
+    checkpointNext("Change product id fourth working adhoc stacksize and priority with same groupname");
+    strncpy(prod.product, "ULUS10391", 9);
+    stacksize = 8192;
+    priority = 48;
+    checkpoint("SceNetAdhocctlInit: %08x stacksize %d priority %d product %s", ctlinit = sceNetAdhocctlInit(stacksize, priority, &prod),stacksize,priority,prod.product);  
+    checkpoint("SceNetAdhocctlCreate: %08x groupname %s", ctlcreate = sceNetAdhocctlCreate(groupname.c_str()),groupname.c_str());  
+    checkpoint("sceNetAdhocctlTerm: %08x", ctlterm = sceNetAdhocctlTerm());
+
+    checkpointNext("Change product id fourth working adhoc stacksize and priority with same different groupname");
+    strncpy(prod.product, "ULUS10391", 9);
+    stacksize = 8192;
+    priority = 48;
+    groupname = "MHP2Q000";
+    checkpoint("SceNetAdhocctlInit: %08x stacksize %d priority %d product %s", ctlinit = sceNetAdhocctlInit(stacksize, priority, &prod),stacksize,priority,prod.product);  
+    checkpoint("SceNetAdhocctlCreate: %08x groupname %s", ctlcreate = sceNetAdhocctlCreate(groupname.c_str()),groupname.c_str());  
+    checkpoint("sceNetAdhocctlTerm: %08x", ctlterm = sceNetAdhocctlTerm());
+
+    checkpointNext("Reinit product id back to original and change stack size");
+    strncpy(prod.product, "NPJH50588", 9);
+    stacksize = 5120;
+    priority = 30;
+    checkpoint("SceNetAdhocctlInit: %08x stacksize %d priority %d product %s", ctlinit = sceNetAdhocctlInit(stacksize, priority, &prod),stacksize,priority,prod.product);  
+    checkpoint("SceNetAdhocctlCreate: %08x groupname %s", ctlcreate = sceNetAdhocctlCreate(groupname.c_str()),groupname.c_str());  
+    checkpoint("sceNetAdhocctlTerm: %08x", ctlterm = sceNetAdhocctlTerm());
+
+
+
+    checkpointNext("Call SceNetAdhocctlInit Twice and term twice");
+    strncpy(prod.product, "NPJH50588", 9);
+    stacksize = 5120;
+    priority = 30;
+    checkpoint("SceNetAdhocctlInit: %08x stacksize %d priority %d product %s", ctlinit = sceNetAdhocctlInit(stacksize, priority, &prod),stacksize,priority,prod.product);  
+    checkpoint("SceNetAdhocctlInit: %08x stacksize %d priority %d product %s", ctlinit = sceNetAdhocctlInit(stacksize, priority, &prod),stacksize,priority,prod.product);  
+    checkpoint("SceNetAdhocctlCreate: %08x groupname %s", ctlcreate = sceNetAdhocctlCreate(groupname.c_str()),groupname.c_str());  
+    checkpoint("sceNetAdhocctlTerm: %08x", ctlterm = sceNetAdhocctlTerm());
+    checkpoint("sceNetAdhocctlTerm: %08x", ctlterm = sceNetAdhocctlTerm());
+
+    checkpointNext("Change product second times after twice init and term twice");
+    strncpy(prod.product, "ULUS10391", 9);
+    stacksize = 8192;
+    priority = 48;
+    groupname = "MHP2Q000";
+    checkpoint("SceNetAdhocctlInit: %08x stacksize %d priority %d product %s", ctlinit = sceNetAdhocctlInit(stacksize, priority, &prod),stacksize,priority,prod.product);  
+    checkpoint("SceNetAdhocctlCreate: %08x groupname %s", ctlcreate = sceNetAdhocctlCreate(groupname.c_str()),groupname.c_str());  
+    checkpoint("sceNetAdhocctlTerm: %08x", ctlterm = sceNetAdhocctlTerm());
+
+
+    checkpointNext("Cleanup module fifth test try");    
+	checkpoint("sceUtilityUnloadModule: %08x", sceUtilityUnloadNetModule(PSP_NET_MODULE_INET));
+	checkpoint("sceUtilityUnloadModule: %08x", sceUtilityUnloadNetModule(PSP_NET_MODULE_ADHOC));
+	checkpoint("sceUtilityUnloadModule: %08x", sceUtilityUnloadNetModule(PSP_NET_MODULE_COMMON));
+
+
+
+    checkpointNext("six Adhoc ctl testing the groupname loading module");  
+    checkpoint("sceUtilityLoadNetModule common: %08x", sceUtilityLoadNetModule(PSP_NET_MODULE_COMMON));
+	checkpoint("sceUtilityLoadNetModule adhoc: %08x", sceUtilityLoadNetModule(PSP_NET_MODULE_ADHOC));
+	checkpoint("sceUtilityLoadNetModule inet: %08x", sceUtilityLoadNetModule(PSP_NET_MODULE_INET));
+
+    stacksize = 8192;
+    priority = 48;
+    strncpy(prod.product, "ULUS10391", 9);
     checkpoint("SceNetAdhocctlInit: %08x stacksize : %d priority : %d product %s" , ctlinit = sceNetAdhocctlInit(stacksize, priority, &prod),stacksize,priority,prod.product);  
-    checkpoint("SceNetAdhocctlCreate: %08x groupname MHP2Q000", ctlcreate = sceNetAdhocctlCreate("MHP2Q000"));  
+    checkpoint("SceNetAdhocctlCreate: %08x groupname $s", ctlcreate = sceNetAdhocctlCreate(groupname.c_str()),groupname.c_str());  
     checkpoint("sceNetAdhocctlTerm: %08x", ctlterm = sceNetAdhocctlTerm());
 
 
@@ -172,8 +282,6 @@ extern "C" int main(int argc, char *argv[]) {
     checkpoint("SceNetAdhocctlCreate: %08x groupname %s", ctlcreate = sceNetAdhocctlCreate(groupname.c_str()),groupname.c_str()); 
     checkpoint("sceNetAdhocctlTerm: %08x", ctlterm = sceNetAdhocctlTerm());
 
-
-    //start
     
     groupname = "MHP2Q0021";
     checkpointNext("Longer group name than 8 character");
@@ -228,6 +336,17 @@ extern "C" int main(int argc, char *argv[]) {
     checkpoint("sceNetAdhocctlTerm: %08x", ctlterm = sceNetAdhocctlTerm());
 
 
+    checkpointNext("we call create with null parameter");
+    checkpoint("SceNetAdhocctlInit: %08x stacksize : %d priority : %d product %s" , ctlinit = sceNetAdhocctlInit(stacksize, priority, &prod),stacksize,priority,prod.product);  
+    checkpoint("SceNetAdhocctlCreate: %08x groupname %s", ctlcreate = sceNetAdhocctlCreate(NULL),NULL);
+    checkpoint("sceNetAdhocctlTerm: %08x", ctlterm = sceNetAdhocctlTerm());
+
+    checkpointNext("we call connect with null parameter");
+    checkpoint("SceNetAdhocctlInit: %08x stacksize : %d priority : %d product %s" , ctlinit = sceNetAdhocctlInit(stacksize, priority, &prod),stacksize,priority,prod.product);  
+    checkpoint("sceNetAdhocctlConnect: %08x groupname %s", ctlconnect = sceNetAdhocctlConnect(NULL),NULL);
+    checkpoint("sceNetAdhocctlTerm: %08x", ctlterm = sceNetAdhocctlTerm());
+
+
     checkpointNext("call create without init");
     checkpoint("SceNetAdhocctlCreate: %08x groupname %s groupnamelength %d", ctlcreate = sceNetAdhocctlCreate(groupname.c_str()),groupname.c_str(),groupname.length());
 
@@ -250,6 +369,10 @@ extern "C" int main(int argc, char *argv[]) {
 
     checkpointNext("call connect when module unloaded");
     checkpoint("sceNetAdhocctlConnect: %08x groupname %s groupnamelength %d", ctlconnect = sceNetAdhocctlConnect(groupname.c_str()),groupname.c_str(),groupname.length());
+
+
+    checkpointNext("call Term when module unloaded");
+    checkpoint("sceNetAdhocctlTerm: %08x", ctlterm = sceNetAdhocctlTerm());
 
     // etc...
 	return 0;
