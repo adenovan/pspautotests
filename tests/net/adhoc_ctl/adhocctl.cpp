@@ -209,7 +209,7 @@ extern "C" int main(int argc, char *argv[]) {
     checkpoint("SceNetAdhocctlCreate: %08x groupname %s", ctlcreate = sceNetAdhocctlCreate(groupname.c_str()),groupname.c_str());  
     checkpoint("sceNetAdhocctlTerm: %08x", ctlterm = sceNetAdhocctlTerm());
 
-    checkpointNext("Change product id fourth working adhoc stacksize and priority with same different groupname");
+    checkpointNext("Change product id fifth working adhoc stacksize and priority with same different groupname");
     strncpy(prod.product, "ULUS10391", 9);
     stacksize = 8192;
     priority = 48;
@@ -254,7 +254,6 @@ extern "C" int main(int argc, char *argv[]) {
 	checkpoint("sceUtilityUnloadModule: %08x", sceUtilityUnloadNetModule(PSP_NET_MODULE_COMMON));
 
 
-
     checkpointNext("six Adhoc ctl testing the groupname loading module");  
     checkpoint("sceUtilityLoadNetModule common: %08x", sceUtilityLoadNetModule(PSP_NET_MODULE_COMMON));
 	checkpoint("sceUtilityLoadNetModule adhoc: %08x", sceUtilityLoadNetModule(PSP_NET_MODULE_ADHOC));
@@ -266,7 +265,6 @@ extern "C" int main(int argc, char *argv[]) {
     checkpoint("SceNetAdhocctlInit: %08x stacksize : %d priority : %d product %s" , ctlinit = sceNetAdhocctlInit(stacksize, priority, &prod),stacksize,priority,prod.product);  
     checkpoint("SceNetAdhocctlCreate: %08x groupname $s", ctlcreate = sceNetAdhocctlCreate(groupname.c_str()),groupname.c_str());  
     checkpoint("sceNetAdhocctlTerm: %08x", ctlterm = sceNetAdhocctlTerm());
-
 
     groupname = "MHP2Q002";
     checkpointNext("Reinit again after term with no params change");
@@ -339,6 +337,7 @@ extern "C" int main(int argc, char *argv[]) {
     checkpointNext("we call create with null parameter");
     checkpoint("SceNetAdhocctlInit: %08x stacksize : %d priority : %d product %s" , ctlinit = sceNetAdhocctlInit(stacksize, priority, &prod),stacksize,priority,prod.product);  
     checkpoint("SceNetAdhocctlCreate: %08x groupname %s", ctlcreate = sceNetAdhocctlCreate(NULL),NULL);
+
     checkpoint("sceNetAdhocctlTerm: %08x", ctlterm = sceNetAdhocctlTerm());
 
     checkpointNext("we call connect with null parameter");
@@ -353,13 +352,20 @@ extern "C" int main(int argc, char *argv[]) {
     checkpointNext("call connect without init");
     checkpoint("sceNetAdhocctlConnect: %08x groupname %s groupnamelength %d", ctlconnect = sceNetAdhocctlConnect(groupname.c_str()),groupname.c_str(),groupname.length());
 
-    checkpointNext("Cleanup exit");    
+    checkpointNext("Cleanup 6 adhocctl test");    
     checkpoint("sceNetAdhocctlTerm: %08x", ctlterm = sceNetAdhocctlTerm());
 	checkpoint("sceUtilityUnloadModule: %08x", sceUtilityUnloadNetModule(PSP_NET_MODULE_INET));
 	checkpoint("sceUtilityUnloadModule: %08x", sceUtilityUnloadNetModule(PSP_NET_MODULE_ADHOC));
 	checkpoint("sceUtilityUnloadModule: %08x", sceUtilityUnloadNetModule(PSP_NET_MODULE_COMMON));
 
     
+
+    checkpoint("Start seven Adhocctl Test");
+
+    
+    struct productStruct getProduct;
+    memset(&getProduct,0,sizeof(getProduct));
+    int getAdhocId;
     
     checkpointNext("call init without library linked");
     checkpoint("SceNetAdhocctlInit: %08x stacksize : %d priority : %d product %s" , ctlinit = sceNetAdhocctlInit(stacksize, priority, &prod),stacksize,priority,prod.product);  
@@ -370,9 +376,107 @@ extern "C" int main(int argc, char *argv[]) {
     checkpointNext("call connect when module unloaded");
     checkpoint("sceNetAdhocctlConnect: %08x groupname %s groupnamelength %d", ctlconnect = sceNetAdhocctlConnect(groupname.c_str()),groupname.c_str(),groupname.length());
 
-
     checkpointNext("call Term when module unloaded");
     checkpoint("sceNetAdhocctlTerm: %08x", ctlterm = sceNetAdhocctlTerm());
+
+    checkpointNext("we call get adhoc id  after unloading module");
+    checkpoint("SceNetAdhocctlGetAdhocId: %08x ",getAdhocId = sceNetAdhocctlGetAdhocId(&getProduct));
+
+
+    checkpointNext("Load Module Eigth ctl testing the debugging the get adhoc id");  
+    checkpoint("sceUtilityLoadNetModule common: %08x", sceUtilityLoadNetModule(PSP_NET_MODULE_COMMON));
+	checkpoint("sceUtilityLoadNetModule adhoc: %08x", sceUtilityLoadNetModule(PSP_NET_MODULE_ADHOC));
+	checkpoint("sceUtilityLoadNetModule inet: %08x", sceUtilityLoadNetModule(PSP_NET_MODULE_INET));
+
+    memset(&prod,0,sizeof(prod));
+    strncpy(prod.product, "NPJH50588", 9);
+    stacksize = 5120;
+    priority = 30;
+
+    struct SceNetAdhocctlPeerInfo * peerInfo;
+    int buffsize;
+    int getPeerList;
+
+
+    memset(&getProduct,0,sizeof(getProduct));
+
+    checkpointNext("Direct call after loading Module");
+    checkpoint("SceNetAdhocctlGetAdhocId: %08x ",getAdhocId = sceNetAdhocctlGetAdhocId(&getProduct));
+
+
+    groupname = "R01";
+    checkpointNext("we call create with groupname parameter and grab product id");
+    checkpoint("Print get Adhoc id Before Call Create, Result Unknown : %d , Product : %s",getProduct.unknown,getProduct.product);
+    checkpoint("SceNetAdhocctlInit: %08x stacksize : %d priority : %d product %s" , ctlinit = sceNetAdhocctlInit(stacksize, priority, &prod),stacksize,priority,prod.product);  
+    checkpoint("SceNetAdhocctlCreate: %08x groupname %s", ctlcreate = sceNetAdhocctlCreate(groupname.c_str()),groupname.c_str());
+    checkpoint("SceNetAdhocctlGetAdhocId: %08x ",getAdhocId = sceNetAdhocctlGetAdhocId(&getProduct));
+    checkpoint("SceNetAdhocctlGetPeerList : %08x",getPeerList = sceNetAdhocctlGetPeerList(NULL,NULL));
+    checkpoint("SceNetAdhocctlGetPeerList : %08x",getPeerList = sceNetAdhocctlGetPeerList(NULL,peerInfo));
+    checkpoint("SceNetAdhocctlGetPeerList : %08x",getPeerList = sceNetAdhocctlGetPeerList(&buffsize,peerInfo));
+    buffsize = 1;
+    peerInfo = (struct SceNetAdhocctlPeerInfo *)malloc(sizeof(SceNetAdhocctlPeerInfo));
+    checkpoint("SceNetAdhocctlGetPeerList : %08x",getPeerList = sceNetAdhocctlGetPeerList(&buffsize,peerInfo));
+
+    int buffDigimon = 2584;
+    void * buffRet = malloc(2584);
+    checkpoint("SceNetAdhocctlGetPeerList : %08x",getPeerList = sceNetAdhocctlGetPeerList(&buffDigimon,buffRet));
+    checkpoint("Print the buf %s", (char *)buffRet);
+
+    checkpoint("Print Peer Info nickname %s , mac %s ",peerInfo->nickname,peerInfo->mac);
+    checkpoint("Print get Adhoc id After Call Create, Result  Unknown : %d , Product : %s",getProduct.unknown,getProduct.product);
+    checkpoint("sceNetAdhocctlTerm: %08x", ctlterm = sceNetAdhocctlTerm());
+
+    memset(&getProduct,0,sizeof(getProduct));
+
+
+    checkpointNext("we call create with null parameter and grab product id");
+    checkpoint("Print get Adhoc id Before Call Create, Result Unknown : %d , Product : %s",getProduct.unknown,getProduct.product);
+    checkpoint("SceNetAdhocctlInit: %08x stacksize : %d priority : %d product %s" , ctlinit = sceNetAdhocctlInit(stacksize, priority, &prod),stacksize,priority,prod.product);  
+    checkpoint("SceNetAdhocctlCreate: %08x groupname %s", ctlcreate = sceNetAdhocctlCreate(NULL),NULL);
+    checkpoint("SceNetAdhocctlGetAdhocId: %08x ",getAdhocId = sceNetAdhocctlGetAdhocId(&getProduct));
+    checkpoint("SceNetAdhocctlGetPeerList : %08x",getPeerList = sceNetAdhocctlGetPeerList(NULL,NULL));
+    checkpoint("SceNetAdhocctlGetPeerList : %08x",getPeerList = sceNetAdhocctlGetPeerList(NULL,peerInfo));
+    checkpoint("SceNetAdhocctlGetPeerList : %08x",getPeerList = sceNetAdhocctlGetPeerList(&buffsize,peerInfo));
+    buffsize = 1;
+    peerInfo = (struct SceNetAdhocctlPeerInfo *)malloc(sizeof(SceNetAdhocctlPeerInfo));
+    checkpoint("SceNetAdhocctlGetPeerList : %08x",getPeerList = sceNetAdhocctlGetPeerList(&buffsize,peerInfo));
+
+    checkpoint("Print Peer Info nickname %s , mac %s ",peerInfo->nickname,peerInfo->mac);
+    checkpoint("Print get Adhoc id After Call Create, Result  Unknown : %d , Product : %s",getProduct.unknown,getProduct.product);
+    checkpoint("sceNetAdhocctlTerm: %08x", ctlterm = sceNetAdhocctlTerm());
+
+    memset(&getProduct,0,sizeof(getProduct));
+    checkpointNext("we call connect with null parameter and grab product id");
+    checkpoint("Print get Adhoc id Before Call Connect, Result Unknown : %d , Product : %s",getProduct.unknown,getProduct.product);
+    checkpoint("SceNetAdhocctlInit: %08x stacksize : %d priority : %d product %s" , ctlinit = sceNetAdhocctlInit(stacksize, priority, &prod),stacksize,priority,prod.product);  
+    checkpoint("sceNetAdhocctlConnect: %08x groupname %s", ctlconnect = sceNetAdhocctlConnect(NULL),NULL);
+    checkpoint("SceNetAdhocctlGetAdhocId: %08x ",getAdhocId = sceNetAdhocctlGetAdhocId(&getProduct));
+    checkpoint("SceNetAdhocctlGetPeerList : %08x",getPeerList = sceNetAdhocctlGetPeerList(NULL,NULL));
+    checkpoint("SceNetAdhocctlGetPeerList : %08x",getPeerList = sceNetAdhocctlGetPeerList(NULL,&peerInfo));
+    checkpoint("SceNetAdhocctlGetPeerList : %08x",getPeerList = sceNetAdhocctlGetPeerList(&buffsize,&peerInfo));
+    
+    buffsize = 0;
+    checkpoint("SceNetAdhocctlGetPeerList : %08x",getPeerList = sceNetAdhocctlGetPeerList(&buffsize,NULL));
+    checkpoint("Print Peer Info nickname %s , mac %s ",peerInfo->nickname,peerInfo->mac);
+    checkpoint("Print get Adhoc id After Call Connect, Result  Unknown : %d , Product : %s ",getProduct.unknown,getProduct.product);
+    checkpoint("sceNetAdhocctlTerm: %08x", ctlterm = sceNetAdhocctlTerm());
+
+    checkpointNext("we call get adhoc id  after termination lets see if something change");
+    checkpoint("SceNetAdhocctlGetAdhocId: %08x ",getAdhocId = sceNetAdhocctlGetAdhocId(&getProduct));
+    checkpoint("Print get Adhoc id After Call Termination, Result  Unknown : %d , Product : %s ",getProduct.unknown,getProduct.product);
+
+    memset(&getProduct,0,sizeof(getProduct));
+    checkpointNext("we call get adhoc id  after termination with new struct memory");
+    checkpoint("SceNetAdhocctlGetAdhocId: %08x ",getAdhocId = sceNetAdhocctlGetAdhocId(&getProduct));
+    checkpoint("Print get Adhoc id After Call Termination, Result  Unknown : %d , Product : %s ",getProduct.unknown,getProduct.product);
+
+
+    checkpointNext("Cleanup Exit adhocctl test");    
+    checkpoint("sceNetAdhocctlTerm: %08x", ctlterm = sceNetAdhocctlTerm());
+	checkpoint("sceUtilityUnloadModule: %08x", sceUtilityUnloadNetModule(PSP_NET_MODULE_INET));
+	checkpoint("sceUtilityUnloadModule: %08x", sceUtilityUnloadNetModule(PSP_NET_MODULE_ADHOC));
+	checkpoint("sceUtilityUnloadModule: %08x", sceUtilityUnloadNetModule(PSP_NET_MODULE_COMMON));
+
 
     // etc...
 	return 0;

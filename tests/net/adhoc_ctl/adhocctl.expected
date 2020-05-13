@@ -1,0 +1,274 @@
+[x] Load Module first adhocctl test
+[r] sceUtilityLoadNetModule common: 00000000
+[r] sceUtilityLoadNetModule adhoc: 00000000
+[r] sceUtilityLoadNetModule inet: 00000000
+
+[x] calling ctl term without init
+[x] sceNetAdhocctlTerm: 00000000
+
+[x] Init and term all zeros product
+[x] SceNetAdhocctlInit: 80410b04
+[x] sceNetAdhocctlTerm: 00000000
+
+[x] Init create and term 9 character product with japan region code first NPJH50588
+[r] SceNetAdhocctlInit: 00000000
+[x] SceNetAdhocctlCreate: 00000000 groupname R01
+[x] sceNetAdhocctlTerm: 00000000
+
+[x] Init and term 8 character product
+[x] SceNetAdhocctlInit: 80410b04
+[x] sceNetAdhocctlTerm: 00000000
+
+[x] Cleanup module first Test
+[x] sceNetAdhocctlTerm: 00000000
+[r] sceUtilityUnloadModule: 00000000
+[r] sceUtilityUnloadModule: 00000000
+[r] sceUtilityUnloadModule: 00000000
+
+[x] Load Module for second adhocctl test
+[r] sceUtilityLoadNetModule common: 00000000
+[r] sceUtilityLoadNetModule adhoc: 00000000
+[r] sceUtilityLoadNetModule inet: 00000000
+
+[x] Init Twice 9 character product
+[r] First SceNetAdhocctlInit: 00000000
+[x] Second SceNetAdhocctlInit: 80410b07
+[x] sceNetAdhocctlTerm: 00000000
+
+[x] Cleanup module second Test
+[r] sceUtilityUnloadModule: 00000000
+[r] sceUtilityUnloadModule: 00000000
+[r] sceUtilityUnloadModule: 00000000
+
+[x] Load Module third adhocctl test
+[r] sceUtilityLoadNetModule common: 00000000
+[r] sceUtilityLoadNetModule adhoc: 00000000
+[r] sceUtilityLoadNetModule inet: 00000000
+[r] SceNetAdhocctlInit: 00000000 stacksize 5120 priority 30
+[x] SceNetAdhocctlCreate: 00000000 groupname R01
+[x] sceNetAdhocctlTerm: 00000000
+
+[x] Keep Product Name change stack size and priority
+[r] SceNetAdhocctlInit: 00000000 stacksize 8192 priority 48
+[x] SceNetAdhocctlCreate: 00000000 groupname R02
+[r] sceNetAdhocctlTerm: 00000000
+
+[x] Cleanup module third Test
+[r] sceUtilityUnloadModule: 00000000
+[r] sceUtilityUnloadModule: 00000000
+[r] sceUtilityUnloadModule: 00000000
+
+[x] Load Module again for fourth adhocctl test
+[r] sceUtilityLoadNetModule common: 00000000
+[r] sceUtilityLoadNetModule adhoc: 00000000
+[r] sceUtilityLoadNetModule inet: 00000000
+
+[x] Initialize fourth working adhoc
+[r] SceNetAdhocctlInit: 00000000 stacksize 5120 priority 30 product NPJH50588
+[x] SceNetAdhocctlCreate: 00000000 groupname R01
+[x] sceNetAdhocctlTerm: 00000000
+
+[x] Change product id fourth working adhoc stacksize and priority with same groupname
+[r] SceNetAdhocctlInit: 00000000 stacksize 8192 priority 48 product ULUS10391
+[x] SceNetAdhocctlCreate: 00000000 groupname R01
+[r] sceNetAdhocctlTerm: 00000000
+
+[x] Change product id fourth working adhoc stacksize and priority with same different groupname
+[r] SceNetAdhocctlInit: 00000000 stacksize 8192 priority 48 product ULUS10391
+[x] SceNetAdhocctlCreate: 00000000 groupname MHP2Q000
+[r] sceNetAdhocctlTerm: 00000000
+
+[x] Reinit product id back to original and change stack size
+[r] SceNetAdhocctlInit: 00000000 stacksize 5120 priority 30 product NPJH50588
+[x] SceNetAdhocctlCreate: 00000000 groupname MHP2Q000
+[x] sceNetAdhocctlTerm: 00000000
+
+[x] Call SceNetAdhocctlInit Twice
+[r] SceNetAdhocctlInit: 00000000 stacksize 5120 priority 30 product NPJH50588
+[x] SceNetAdhocctlInit: 80410b07 stacksize 5120 priority 30 product NPJH50588
+[x] SceNetAdhocctlCreate: 80410b08 groupname MHP2Q000
+[x] sceNetAdhocctlTerm: 00000000
+
+[x] Change product second times after twice init
+[r] SceNetAdhocctlInit: 80410601 stacksize 8192 priority 48 product ULUS10391
+[x] SceNetAdhocctlCreate: 80410b08 groupname MHP2Q000
+[x] sceNetAdhocctlTerm: 00000000
+
+[x] Cleanup module fourth test try
+[r] sceUtilityUnloadModule: 00000000
+[r] sceUtilityUnloadModule: 00000000
+[r] sceUtilityUnloadModule: 00000000
+
+[x] Load Module again for fifth adhocctl test
+[r] sceUtilityLoadNetModule common: 00000000
+[r] sceUtilityLoadNetModule adhoc: 00000000
+[r] sceUtilityLoadNetModule inet: 00000000
+
+[x] Initialize fifth working adhoc
+[r] SceNetAdhocctlInit: 00000000 stacksize 5120 priority 30 product NPJH50588
+[x] SceNetAdhocctlCreate: 00000000 groupname R01
+[x] sceNetAdhocctlTerm: 00000000
+
+[x] Change product id fourth working adhoc stacksize and priority with same groupname
+[r] SceNetAdhocctlInit: 00000000 stacksize 8192 priority 48 product ULUS10391
+[x] SceNetAdhocctlCreate: 00000000 groupname R01
+[r] sceNetAdhocctlTerm: 00000000
+
+[x] Change product id fifth working adhoc stacksize and priority with same different groupname
+[r] SceNetAdhocctlInit: 00000000 stacksize 8192 priority 48 product ULUS10391
+[x] SceNetAdhocctlCreate: 00000000 groupname MHP2Q000
+[r] sceNetAdhocctlTerm: 00000000
+
+[x] Reinit product id back to original and change stack size
+[r] SceNetAdhocctlInit: 00000000 stacksize 5120 priority 30 product NPJH50588
+[x] SceNetAdhocctlCreate: 00000000 groupname MHP2Q000
+[x] sceNetAdhocctlTerm: 00000000
+
+[x] Call SceNetAdhocctlInit Twice and term twice
+[r] SceNetAdhocctlInit: 00000000 stacksize 5120 priority 30 product NPJH50588
+[x] SceNetAdhocctlInit: 80410b07 stacksize 5120 priority 30 product NPJH50588
+[x] SceNetAdhocctlCreate: 80410b08 groupname MHP2Q000
+[x] sceNetAdhocctlTerm: 00000000
+[x] sceNetAdhocctlTerm: 00000000
+
+[x] Change product second times after twice init and term twice
+[r] SceNetAdhocctlInit: 80410601 stacksize 8192 priority 48 product ULUS10391
+[x] SceNetAdhocctlCreate: 80410b08 groupname MHP2Q000
+[x] sceNetAdhocctlTerm: 00000000
+
+[x] Cleanup module fifth test try
+[r] sceUtilityUnloadModule: 00000000
+[r] sceUtilityUnloadModule: 00000000
+[r] sceUtilityUnloadModule: 00000000
+
+[x] six Adhoc ctl testing the groupname loading module
+[r] sceUtilityLoadNetModule common: 00000000
+[r] sceUtilityLoadNetModule adhoc: 00000000
+[r] sceUtilityLoadNetModule inet: 00000000
+[r] SceNetAdhocctlInit: 00000000 stacksize : 8192 priority : 48 product ULUS10391
+[x] SceNetAdhocctlCreate: 00000000 groupname $s
+[r] sceNetAdhocctlTerm: 00000000
+
+[x] Reinit again after term with no params change
+[r] SceNetAdhocctlInit: 00000000 stacksize : 8192 priority : 48 product ULUS10391
+[x] SceNetAdhocctlCreate: 00000000 groupname MHP2Q002
+[r] sceNetAdhocctlTerm: 00000000
+
+[x] What happens if we call create two times?
+[r] SceNetAdhocctlInit: 00000000 stacksize : 8192 priority : 48 product ULUS10391
+[x] SceNetAdhocctlCreate: 00000000 groupname MHP2Q002
+[x] SceNetAdhocctlCreate: 80410b10 groupname MHP2Q002
+[r] sceNetAdhocctlTerm: 00000000
+
+[x] Longer group name than 8 character
+[r] SceNetAdhocctlInit: 00000000 stacksize : 8192 priority : 48 product ULUS10391
+[x] SceNetAdhocctlCreate: 00000000 groupname MHP2Q0021 groupnamelength 9
+[r] sceNetAdhocctlTerm: 00000000
+[r] SceNetAdhocctlInit: 00000000 stacksize : 8192 priority : 48 product ULUS10391
+[x] SceNetAdhocctlCreate: 00000000 groupname MHP2Q00211 groupnamelength 10
+[r] sceNetAdhocctlTerm: 00000000
+[r] SceNetAdhocctlInit: 00000000 stacksize : 8192 priority : 48 product ULUS10391
+[x] SceNetAdhocctlCreate: 00000000 groupname MHP2Q002112 groupnamelength 11
+[r] sceNetAdhocctlTerm: 00000000
+[r] SceNetAdhocctlInit: 00000000 stacksize : 8192 priority : 48 product ULUS10391
+[x] SceNetAdhocctlCreate: 00000000 groupname MHP2Q0021123 groupnamelength 12
+[r] sceNetAdhocctlTerm: 00000000
+[r] SceNetAdhocctlInit: 00000000 stacksize : 8192 priority : 48 product ULUS10391
+[x] SceNetAdhocctlCreate: 00000000 groupname MHP2Q00211234 groupnamelength 13
+[r] sceNetAdhocctlTerm: 00000000
+[r] SceNetAdhocctlInit: 00000000 stacksize : 8192 priority : 48 product ULUS10391
+[x] SceNetAdhocctlCreate: 00000000 groupname MHP2Q002112345 groupnamelength 14
+[r] sceNetAdhocctlTerm: 00000000
+
+[x] Can we call connect after create?
+[r] SceNetAdhocctlInit: 00000000 stacksize : 8192 priority : 48 product ULUS10391
+[x] SceNetAdhocctlCreate: 00000000 groupname MHP2Q002 groupnamelength 8
+[x] sceNetAdhocctlConnect: 80410b10 groupname MHP2Q002 groupnamelength 8
+[r] sceNetAdhocctlTerm: 00000000
+
+[x] we call connect without someone creating the control
+[r] SceNetAdhocctlInit: 00000000 stacksize : 8192 priority : 48 product ULUS10391
+[x] sceNetAdhocctlConnect: 00000000 groupname MHP2Q002 groupnamelength 8
+[r] sceNetAdhocctlTerm: 00000000
+
+[x] we call create after connect in the control
+[r] SceNetAdhocctlInit: 00000000 stacksize : 8192 priority : 48 product ULUS10391
+[x] sceNetAdhocctlConnect: 00000000 groupname MHP2Q002 groupnamelength 8
+[x] SceNetAdhocctlCreate: 80410b10 groupname MHP2Q002 groupnamelength 8
+[r] sceNetAdhocctlTerm: 00000000
+
+[x] we call create with null parameter
+[r] SceNetAdhocctlInit: 00000000 stacksize : 8192 priority : 48 product ULUS10391
+[x] SceNetAdhocctlCreate: 00000000 groupname (null)
+[r] sceNetAdhocctlTerm: 00000000
+
+[x] we call connect with null parameter
+[r] SceNetAdhocctlInit: 00000000 stacksize : 8192 priority : 48 product ULUS10391
+[x] sceNetAdhocctlConnect: 00000000 groupname (null)
+[r] sceNetAdhocctlTerm: 00000000
+
+[x] call create without init
+[x] SceNetAdhocctlCreate: 80410b08 groupname MHP2Q002 groupnamelength 8
+
+[x] call connect without init
+[x] sceNetAdhocctlConnect: 80410b08 groupname MHP2Q002 groupnamelength 8
+
+[x] Cleanup 6 adhocctl test
+[x] sceNetAdhocctlTerm: 00000000
+[r] sceUtilityUnloadModule: 00000000
+[r] sceUtilityUnloadModule: 00000000
+[r] sceUtilityUnloadModule: 00000000
+[x] Start seven Adhocctl Test
+
+[x] call init without library linked
+[x] SceNetAdhocctlInit: 8002013a stacksize : 8192 priority : 48 product ULUS10391
+
+[x] call create when module unloaded
+[x] SceNetAdhocctlCreate: 8002013a groupname MHP2Q002 groupnamelength 8
+
+[x] call connect when module unloaded
+[x] sceNetAdhocctlConnect: 8002013a groupname MHP2Q002 groupnamelength 8
+
+[x] call Term when module unloaded
+[x] sceNetAdhocctlTerm: 8002013a
+
+[x] we call get adhoc id  after unloading module
+[x] SceNetAdhocctlGetAdhocId: 8002013a 
+
+[x] Load Module Eigth ctl testing the debugging the get adhoc id
+[r] sceUtilityLoadNetModule common: 00000000
+[r] sceUtilityLoadNetModule adhoc: 00000000
+[r] sceUtilityLoadNetModule inet: 00000000
+
+[x] Direct call after loading Module
+[x] SceNetAdhocctlGetAdhocId: 80410b08 
+
+[x] we call create with null parameter and grab product id
+[x] Print get Adhoc id Before Call Create, Result Unknown : 0 , Product : 
+[r] SceNetAdhocctlInit: 00000000 stacksize : 5120 priority : 30 product NPJH50588
+[x] SceNetAdhocctlCreate: 00000000 groupname (null)
+[x] SceNetAdhocctlGetAdhocId: 00000000 
+[x] Print get Adhoc id After Call Create, Result  Unknown : 0 , Product : NPJH50588
+[x] sceNetAdhocctlTerm: 00000000
+
+[x] we call connect with null parameter and grab product id
+[x] Print get Adhoc id Before Call Connect, Result Unknown : 0 , Product : 
+[r] SceNetAdhocctlInit: 00000000 stacksize : 5120 priority : 30 product NPJH50588
+[x] sceNetAdhocctlConnect: 00000000 groupname (null)
+[x] SceNetAdhocctlGetAdhocId: 00000000 
+[x] Print get Adhoc id After Call Connect, Result  Unknown : 0 , Product : NPJH50588 
+[x] sceNetAdhocctlTerm: 00000000
+
+[x] we call get adhoc id  after termination lets see if something change
+[x] SceNetAdhocctlGetAdhocId: 80410b08 
+[x] Print get Adhoc id After Call Termination, Result  Unknown : 0 , Product : NPJH50588 
+
+[x] we call get adhoc id  after termination with new struct memory
+[x] SceNetAdhocctlGetAdhocId: 80410b08 
+[x] Print get Adhoc id After Call Termination, Result  Unknown : 0 , Product :  
+
+[x] Cleanup Exit adhocctl test
+[x] sceNetAdhocctlTerm: 00000000
+[r] sceUtilityUnloadModule: 00000000
+[r] sceUtilityUnloadModule: 00000000
+[r] sceUtilityUnloadModule: 00000000
