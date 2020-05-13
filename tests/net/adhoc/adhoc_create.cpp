@@ -44,6 +44,8 @@ extern "C" int main(int argc, char *argv[]) {
     while(running){
         sceCtrlPeekBufferPositive(&buttonInput, 1); 
         if(buttonInput.Buttons != 0) {
+
+            // need to execute function based on button input can someone give advice how to do it properly?
             if(buttonInput.Buttons & PSP_CTRL_CROSS){
                 getPeerList = sceNetAdhocctlGetPeerList(&buff_size,buf);
                 checkpointNext("SceNetAdhocctlGetPeerList : %08x",getPeerList);
