@@ -60,8 +60,9 @@ PSP_MAIN_THREAD_ATTR(PSP_THREAD_ATTR_USER | PSP_THREAD_ATTR_VFPU);
 
 unsigned int RUNNING_ON_EMULATOR = 0;
 unsigned int CHECKPOINT_ENABLE_TIME = 0;
-unsigned int CHECKPOINT_OUTPUT_DIRECT = 0;
+unsigned int CHECKPOINT_OUTPUT_DIRECT = 1;
 unsigned int HAS_DISPLAY = 1;
+unsigned int NET_REMOTE_LOG = 0;
 
 // 21 MB to give space for thread stacks and etc.
 unsigned int sce_newlib_heap_kb_size = 21504;
@@ -231,7 +232,8 @@ void test_begin() {
 		//stderr = stdout;
 		setbuf(stdout, NULL);
 	} else {
-    // Send the output to the host.
+    	// Send the output to the host.
+
 		freopen("host0:/__testoutput.txt", "wb", stdout);
 		freopen("host0:/__testerror.txt", "wb", stderr);
 		stdout_back._write = stdout->_write;

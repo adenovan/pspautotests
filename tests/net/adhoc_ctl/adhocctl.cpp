@@ -11,12 +11,26 @@
 
 extern "C" int main(int argc, char *argv[]) {
     int ctlinit,ctlterm,ctlcreate,ctlconnect;
+    int netinit,netterm;
+    int getLocalEther;
 
     int stacksize = 5120;
     int priority = 30;
     struct productStruct prod;
 
     std::string groupname;
+
+    unsigned char mac[6];
+    memset(&mac,0,sizeof(mac));
+
+
+    //net param based on mhfu
+    int poolsize = 131072;
+    int calloutprio = 32;
+    int calloutstack = 0;
+    int netintrprio = 32;
+    int netintrstack = 0;
+    
 
 	checkpointNext("Load Module first adhocctl test");
 	checkpoint("sceUtilityLoadNetModule common: %08x", sceUtilityLoadNetModule(PSP_NET_MODULE_COMMON));
@@ -26,8 +40,18 @@ extern "C" int main(int argc, char *argv[]) {
     checkpointNext("calling ctl term without init");
     checkpoint("sceNetAdhocctlTerm: %08x", ctlterm = sceNetAdhocctlTerm());
     
+    checkpoint("Ether Addr before init: %08x", getLocalEther = sceNetGetLocalEtherAddr(mac));
+    checkpoint("print mac %02X:%02X:%02X:%02X:%02X:%02X", mac[0],mac[1],mac[2],mac[3],mac[4],mac[5],mac[6]);
+    memset(&mac,0,sizeof(mac));
 
-	checkpointNext("Init and term all zeros product");
+    checkpoint("sceNetInit : %08x",netinit = sceNetInit(poolsize,calloutprio,calloutstack,netintrprio,netintrstack));
+
+    checkpoint("Ether Addr after net init: %08x", getLocalEther = sceNetGetLocalEtherAddr(mac));
+    checkpoint("print mac %02X:%02X:%02X:%02X:%02X:%02X", mac[0],mac[1],mac[2],mac[3],mac[4],mac[5],mac[6]);
+    memset(&mac,0,sizeof(mac));
+
+	
+    checkpointNext("Init and term all zeros product");
     memset(&prod,0,sizeof(prod));
     checkpoint("SceNetAdhocctlInit: %08x", ctlinit = sceNetAdhocctlInit(stacksize, priority, &prod));  
     checkpoint("sceNetAdhocctlTerm: %08x", ctlterm = sceNetAdhocctlTerm());
@@ -37,9 +61,21 @@ extern "C" int main(int argc, char *argv[]) {
     strncpy(prod.product, "NPJH50588", 9);
     
     checkpoint("SceNetAdhocctlInit: %08x", ctlinit = sceNetAdhocctlInit(stacksize, priority, &prod)); 
-    checkpoint("SceNetAdhocctlCreate: %08x groupname R01", ctlcreate = sceNetAdhocctlCreate("R01"));  
-    checkpoint("sceNetAdhocctlTerm: %08x", ctlterm = sceNetAdhocctlTerm());
 
+    checkpoint("Ether Addr before ctlinit: %08x", getLocalEther = sceNetGetLocalEtherAddr(mac));
+    checkpoint("print mac %02X:%02X:%02X:%02X:%02X:%02X", mac[0],mac[1],mac[2],mac[3],mac[4],mac[5],mac[6]);
+    memset(&mac,0,sizeof(mac));
+
+    
+    checkpoint("SceNetAdhocctlCreate: %08x groupname R01", ctlcreate = sceNetAdhocctlCreate("R01")); 
+
+    checkpoint("Ether Addr after ctlcreate: %08x", getLocalEther = sceNetGetLocalEtherAddr(mac));
+    checkpoint("print mac %02X:%02X:%02X:%02X:%02X:%02X", mac[0],mac[1],mac[2],mac[3],mac[4],mac[5],mac[6]);
+    memset(&mac,0,sizeof(mac));
+
+
+    checkpoint("sceNetAdhocctlTerm: %08x", ctlterm = sceNetAdhocctlTerm());
+    
     checkpointNext("Init and term 8 character product");    
     memset(&prod,0,sizeof(prod));
     strncpy(prod.product,"NPJH5058",8);
@@ -49,6 +85,7 @@ extern "C" int main(int argc, char *argv[]) {
 
     checkpointNext("Cleanup module first Test");    
     checkpoint("sceNetAdhocctlTerm: %08x", ctlterm = sceNetAdhocctlTerm());
+    checkpoint("sceNetTerm: %08x",netterm = sceNetTerm());
 	checkpoint("sceUtilityUnloadModule: %08x", sceUtilityUnloadNetModule(PSP_NET_MODULE_INET));
 	checkpoint("sceUtilityUnloadModule: %08x", sceUtilityUnloadNetModule(PSP_NET_MODULE_ADHOC));
 	checkpoint("sceUtilityUnloadModule: %08x", sceUtilityUnloadNetModule(PSP_NET_MODULE_COMMON));

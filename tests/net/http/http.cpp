@@ -1,6 +1,3 @@
-// WARNING: This test doesn't actually work yet. SendRequest comes back with some DNS error on the real PSP.
-
-
 #include <common.h>
 #include <pspnet.h>
 #include <psphttp.h>
