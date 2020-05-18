@@ -9,10 +9,13 @@
 #include <string>
 #include <pspctrl.h>
 
+sceNetAdhocctlHandler adhochandler(int flag, int error, void * uknown){
+    checkpoint("Event Handler %08x , %08x , %p",flag,error,uknown);
+}
 
 extern "C" int main(int argc, char *argv[]) {
     int ctlinit,ctlterm,ctlcreate,ctlconnect,ctlscan,ctlscaninfo,netinit,netterm;
-    int adhocinit , getPeerList, adhocterm;
+    int adhocinit , getPeerList, adhocterm, addhandler;
 
     int stacksize = 5120;
     int priority = 30;
@@ -23,9 +26,6 @@ extern "C" int main(int argc, char *argv[]) {
     char * buf = (char *)malloc(2584);
     memset(buf,0,2584);
 
-
-
-  
     struct SceNetAdhocctlScanInfo * scan_buf = (struct SceNetAdhocctlScanInfo *)malloc(sizeof(SceNetAdhocctlScanInfo));
     int scan_size = sizeof(SceNetAdhocctlScanInfo);
 
@@ -37,10 +37,6 @@ extern "C" int main(int argc, char *argv[]) {
 
     bool running = true;
     
-    ctlinit = sceNetAdhocInit();
-
-
-    checkpoint("Error : %s",strerror(ctlinit));
 	checkpointNext("Load Module all net module test");
 	checkpoint("sceUtilityLoadNetModule common: %08x", sceUtilityLoadNetModule(PSP_NET_MODULE_COMMON));
 	checkpoint("sceUtilityLoadNetModule adhoc: %08x", sceUtilityLoadNetModule(PSP_NET_MODULE_ADHOC));
@@ -96,9 +92,20 @@ extern "C" int main(int argc, char *argv[]) {
         //this a tap and thats what we looking for
         if((prev_buttons & PSP_CTRL_CROSS) == 0 && (curr_buttons & PSP_CTRL_CROSS) != 0) {
             buff_size = 2584;
+            checkpoint("calling get peer info with buffsize %d",buff_size);
             getPeerList = sceNetAdhocctlGetPeerList(&buff_size,buf);
             checkpoint("SceNetAdhocctlGetPeerList : %08x",getPeerList);
-            checkpointNext(NULL);
+
+            if(getPeerList == 0){
+                struct SceNetAdhocctlPeerInfo * info = (SceNetAdhocctlPeerInfo *)buf;
+                checkpoint("Buffsize after call %d",buff_size);
+                checkpoint("Peer info Next %p",info->next);
+                checkpoint("Peer Info nickname %s", info->nickname);
+                checkpoint("Peer Info mac %02X:%02X:%02X:%02X:%02X:%02X ",info->mac[0],info->mac[1],info->mac[2],info->mac[3],info->mac[4],info->mac[5]);
+                checkpoint("Peer Info unknown %02X:%02X:%02X:%02X:%02X:%02X ",info->unknown[0],info->unknown[1],info->unknown[2],info->unknown[3],info->unknown[4],info->unknown[5]);
+                checkpoint("Peer info timestamp %ul" ,info->timestamp);
+                checkpointNext(NULL);
+            }
         }
 
         if((prev_buttons & PSP_CTRL_UP) == 0 && (curr_buttons & PSP_CTRL_UP) != 0) {
